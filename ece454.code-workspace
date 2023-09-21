@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.sql": "postgres",
+			"CMakeLists.txt": "cmake",
+			"logmessages.txt": "log",
+			"*.err": "log",
+			"*.out": "log",
+			"*.s": "arm",
+			"*.scpt": "applescript",
+			"*.notion_formula": "arm",
+			"*.jsx": "javascript",
+			"stdio.h": "c"
+		}
+	}
+}
