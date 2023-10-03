@@ -1,0 +1,13 @@
+# compile code
+make
+
+# run command
+./gcov_test_1
+
+# run gcov to generate coverage information
+gcov -b gcov_test_1
+
+# look at the gcov output file
+emacs gcov_test_1.c.gcov
+
+# same instructions for gcov_test_2

@@ -1,0 +1,27 @@
+# compile code
+make
+
+# run command
+gprof_test
+
+# run gprof to generate profiling information
+gprof gprof_test > gprof.out
+
+# look at the output file
+emacs gprof.out
+
+gprof output is a bit confusing:
+
+
+index % time    self  children    called     name
+-----------------------------------------------
+                6.67   13.11       1/1       main [1]
+[2]     73.9    6.67   13.11       1         func1 [2]
+                6.59    0.00       1/2       func2 [3]
+                6.53    0.00       1/1       func1_child [4]
+
+-> means "time propagated"
+
+		self->parent	self's children->parent
+[2]		self		children
+		child->self	child's children->self
