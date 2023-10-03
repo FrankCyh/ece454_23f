@@ -1,0 +1,55 @@
+        -:    0:Source:gcov_test1.c
+        -:    0:Graph:gcov_test1.gcno
+        -:    0:Data:gcov_test1.gcda
+        -:    0:Runs:1
+        -:    1:// gcov_test1.c
+        -:    2:#include<stdio.h>
+        -:    3:
+        -:    4:static void func2(void);
+        -:    5:
+        -:    6:void
+        1:    7:func1_child(void)
+        -:    8:{
+        1:    9:	printf("\nInside func1_child()\n");
+        1:   10:	unsigned int i = 0;
+        -:   11:
+4294965112:   12:	for (; i < 0xfffff777; i++);
+        -:   13:
+        1:   14:	return;
+        -:   15:}
+        -:   16:
+        -:   17:void
+        1:   18:func1(void)
+        -:   19:{
+        1:   20:	printf("\nInside func1()\n");
+        1:   21:	unsigned int i = 0;
+        -:   22:
+4294967296:   23:	for (; i < 0xffffffff; i++);
+        1:   24:	func1_child();
+        -:   25:
+        1:   26:	func2();
+        1:   27:	return;
+        -:   28:}
+        -:   29:
+        -:   30:static void
+        2:   31:func2(void)
+        -:   32:{
+        2:   33:	printf("\nInside func2()\n");
+        2:   34:	unsigned int i = 0;
+        -:   35:
+8589926402:   36:	for (; i < 0xfffff000; i++);
+        2:   37:	return;
+        -:   38:}
+        -:   39:
+        -:   40:int
+        1:   41:main(void)
+        -:   42:{
+        1:   43:	printf("\nInside main()\n");
+        1:   44:	int i = 0;
+        -:   45:
+268435456:   46:	for (; i < 0xfffffff; i++);
+        1:   47:	func1();
+        1:   48:	func2();
+        -:   49:
+        1:   50:	return 0;
+        -:   51:}
