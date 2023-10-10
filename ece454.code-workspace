@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "/nfs/ug/homes-2/c/cheny776/ece454/"
 		}
 	],
 	"settings": {
@@ -15,7 +15,11 @@
 			"*.scpt": "applescript",
 			"*.notion_formula": "arm",
 			"*.jsx": "javascript",
-			"stdio.h": "c"
+			"stdio.h": "c",
+			"ctime": "c",
+			"chrono": "c",
+			"condition_variable": "c",
+			"mutex": "c"
 		}
 	}
 }
