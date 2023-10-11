@@ -33,7 +33,7 @@ int main(void) {
     m_sbrk(+5);
     printf("\n 2- h_mem_start=%p   c_break=%p   h_mem_end=%p", h_mem_start, c_break, h_mem_end);
     m_sbrk(+100);
-    printf("\n 3- h_mem_start=%p   c_break=%p   h_mem_end=%p", h_mem_start, c_break, h_mem_end);
+    printf("\n 3- h_mem_start=%p   c_break=%p   h_mem_end=%p\n", h_mem_start, c_break, h_mem_end);
 
     return (0);
 }

@@ -1,9 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#define FREE 0
+#define BLOCKED 1
+
+#define HEAPSIZE 1000
+
+struct h_Node{
+    int STATUS;                 // defines the status of the block: 0 ifit is free and 1 if it is blocked 
+    size_t SIZE;                // defines the size of the block in bytes
+    void   *c_blk;              // defines the starting address of the current block
+    void   *n_blk;              // defines the starting address of the next block
+    struct h_Node * NEXT;       // points to the next h_Node containing the data for the next block linked to this one 
+};
+
+struct h_List{
+    struct h_Node *head;
+};
 
 int m_init(void) {
     /* This method should be called to initialize the heap area in your program, before calling any other methods.
      * It returns 0 for a successful initializing of the Heap and returns not 0 in case of any problems.
      * Use this method to make an initial size for the Heap segment. All memory allocation for dynamic usage should be done within this part.
      */
+    struct h_List *Heap = sbrk(sizeof(struct h_List));
+    printf("Here is the Heap address: %p\n", Heap);
+    struct h_Node * head = Heap->head; 
+    head = sbrk(sizeof(struct h_Node));
+    printf("Here is the head node address: %p\n", head);
+    head->STATUS = FREE;
+    struct h_Node * temp = head;
+    for(int i = 0; i < HEAPSIZE-1; i++){
+        temp->NEXT = sbrk(sizeof(struct h_Node));
+        // printf("Here is the new node address: %p\n", temp->NEXT);
+        temp->NEXT->STATUS = FREE;
+        temp->NEXT->NEXT = NULL;
+        temp = temp->NEXT;
+    }
+    printf ("Final address after allocating heap structure is %p\n", sbrk(0));
+
     return 0;
 }
 
@@ -38,4 +74,8 @@ int m_check(void) {
      * It returns 0 for a successful consistency checking of the Heap, and returns -1 (or none zero) in case of any problems
      */
     return 0;
+}
+
+int main(){
+    int return_val = m_init();
 }
