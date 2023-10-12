@@ -5,7 +5,8 @@
 #define FREE 0
 #define BLOCKED 1
 
-#define HEAPSIZE 1000
+#define HEAPSIZE 10000
+char h_mem[HEAPSIZE] = {0};
 
 struct h_Node{
     int STATUS;                 // defines the status of the block: 0 ifit is free and 1 if it is blocked 
@@ -16,31 +17,46 @@ struct h_Node{
 };
 
 struct h_List{
+    void *start;
+    void *end;
     struct h_Node *head;
 };
+
+struct h_List *Heap;
 
 int m_init(void) {
     /* This method should be called to initialize the heap area in your program, before calling any other methods.
      * It returns 0 for a successful initializing of the Heap and returns not 0 in case of any problems.
      * Use this method to make an initial size for the Heap segment. All memory allocation for dynamic usage should be done within this part.
      */
-    struct h_List *Heap = sbrk(sizeof(struct h_List));
-    printf("Here is the Heap address: %p\n", Heap);
-    struct h_Node * head = Heap->head; 
-    head = sbrk(sizeof(struct h_Node));
+    Heap = sbrk(sizeof(struct h_List));                 // Allocate the Linked List
+    printf("Here is the Linked List address: %p\n", Heap);
+    Heap->start = (char*)h_mem;                         // Populate the start address field in the linked list. (start address of the heap)
+    printf("Heap start address is: %p\n", Heap->start);
+    Heap->end = (char*)(h_mem + (HEAPSIZE-1));          // Populate the end address field in the linked list. (end address of the heap)
+    printf("Heap last address is: %p\n", Heap->end);
+    Heap->head = sbrk(sizeof(struct h_Node));           // Allocate head of the "header" linked list. At the beginning, there is just one header.
+    struct h_Node * head = Heap->head;                  
     printf("Here is the head node address: %p\n", head);
-    head->STATUS = FREE;
-    struct h_Node * temp = head;
-    for(int i = 0; i < HEAPSIZE-1; i++){
-        temp->NEXT = sbrk(sizeof(struct h_Node));
-        // printf("Here is the new node address: %p\n", temp->NEXT);
-        temp->NEXT->STATUS = FREE;
-        temp->NEXT->NEXT = NULL;
-        temp = temp->NEXT;
-    }
-    printf ("Final address after allocating heap structure is %p\n", sbrk(0));
+    head->STATUS = FREE;                                // Initialise status to free.
+    head->c_blk = (char *)h_mem;                        // Initialise c_blk with start address of the heap.
+    head->n_blk = NULL;                                 // If n_blk is NULL, it means that this block's last address is the same as the Heap's end address. This is the last header block
+    head->NEXT = NULL;                                  // No next "header" block
+    head->SIZE = 10000;                                 // Size of heap is 10,000 bytes.
 
     return 0;
+}
+
+// Linked List helper functions.
+struct h_Node * find_header_block(void* address, struct h_Node * head){
+    struct h_Node* temp = head;
+    while(temp!=NULL){
+        if(temp->c_blk == address){
+            break;
+        }
+        temp = temp->NEXT;
+    }
+    return temp;
 }
 
 void* m_malloc(size_t size) {
@@ -64,8 +80,23 @@ void* m_realloc(void* ptr, size_t size) {
      */
 }
 
-void h_layout(struct h_Node* ptr) {
+void h_layout(struct h_Node* head) {
     /* display the layout of the Heap after each modification */
+    struct h_Node* temp = head;
+    int block_num = 0;
+    while(temp!=NULL){
+        block_num++;
+        printf("BLOCK %d\n",block_num);
+        if(temp->STATUS == 1)
+            printf("Block Status: Blocked\n");
+        else
+            printf("Block Status: Free\n");
+
+        printf("Block Size: %ld\n", temp->SIZE);
+        printf("Block Start Address: %p\n", (char*)temp->c_blk);
+
+        temp = temp->NEXT;
+    }
     return;
 }
 
@@ -78,4 +109,6 @@ int m_check(void) {
 
 int main(){
     int return_val = m_init();
+    printf ("\nPrinting Heap Layout\n\n");
+    h_layout(Heap->head);
 }
