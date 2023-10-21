@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define FREE 0
-#define BLOCKED 1
+enum STATUS {FREE, BLOCKED};
 
 #define HEAPSIZE 10000
 char h_mem[HEAPSIZE] = {0};
@@ -32,12 +31,12 @@ int m_init(void) {
     Heap = sbrk(sizeof(struct h_List));                 // Allocate the Linked List
     printf("Here is the Linked List address: %p\n", Heap);
     Heap->start = (char*)h_mem;                         // Populate the start address field in the linked list. (start address of the heap)
-    printf("Heap start address is: %p\n", Heap->start);
+    printf("Heap start address: %p\n", Heap->start);
     Heap->end = (char*)(h_mem + (HEAPSIZE-1));          // Populate the end address field in the linked list. (end address of the heap)
-    printf("Heap last address is: %p\n", Heap->end);
+    printf("Heap last address: %p\n", Heap->end);
     Heap->head = sbrk(sizeof(struct h_Node));           // Allocate head of the "header" linked list. At the beginning, there is just one header.
     struct h_Node * head = Heap->head;                  
-    printf("Here is the head node address: %p\n", head);
+    printf("Head node address: %p\n", head);
     head->STATUS = FREE;                                // Initialise status to free.
     head->c_blk = (char *)h_mem;                        // Initialise c_blk with start address of the heap.
     head->n_blk = NULL;                                 // If n_blk is NULL, it means that this block's last address is the same as the Heap's end address. This is the last header block
@@ -73,6 +72,7 @@ void m_free(void* ptr) {
      * Like the real `free()` method, the `m_fee()` should set the allocated block as a free block now, and this should be done by modifying the information in the relevant h_Node of that block.Moreover, it should also check if the previous and / or next blocks are free or not, and if yes, join them to the current free block to make a bigger free block and finally update all the relevant `h_Nodes`.
      */
 }
+
 void* m_realloc(void* ptr, size_t size) {
     /* This method returns a pointer to the new allocated block in the Heap with size bytes (at least) after resizing an old block pointed to by ptr. This is an entire separated block within the Heap and should not have any
      * overlap with the other allocated blocks.
@@ -87,7 +87,7 @@ void h_layout(struct h_Node* head) {
     while(temp!=NULL){
         block_num++;
         printf("BLOCK %d\n",block_num);
-        if(temp->STATUS == 1)
+        if(temp->STATUS == BLOCKED)
             printf("Block Status: Blocked\n");
         else
             printf("Block Status: Free\n");
