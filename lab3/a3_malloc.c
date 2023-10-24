@@ -63,6 +63,60 @@ void* m_malloc(size_t size) {
     /* This method returns a pointer to the allocated block in the Heap with size bytes (at least). This is an entire separated block within the Heap and should not have any overlap with the other allocated blocks.
      * The method should search to find the best fit in the Heap for that given size and allocate it. In this process the memory has already been divided into various size of blocks. To manage these blocks a mechanism is provided at section 3.1.3 using a linked-list. Each node in this linked-list, naming h_Node, is connected to a block in the Heap and contains its information. Thus for tracking the information about each block, its relevant h_Node should be checked.
      */
+    int foundBlock = 0;
+    int bestFit = HEAPSIZE+1;
+    struct h_Node * allocBlock = NULL;
+    struct h_Node * allocBlockPrev = NULL;
+    struct h_Node * temp = Heap->head;
+    struct h_Node * prev = NULL;
+    while(temp != NULL){
+        if(temp->STATUS == FREE){
+            int blockSize;
+            if(temp->n_blk != NULL){
+                blockSize = temp->n_blk - temp->c_blk;
+            }
+            else{
+                blockSize = Heap->end - temp->c_blk + 1;
+            }
+            if(blockSize >= size){
+                foundBlock = 1;
+                if(blockSize < bestFit){
+                    bestFit = blockSize;
+                    allocBlock = temp;
+                    allocBlockPrev = prev;
+                }
+            }
+        }
+        prev = temp;
+        temp = temp->NEXT;
+    }
+    if(foundBlock == 1){
+        // allocate new header block using sbrk(sizeof(struct h_Node));
+        // adjust next pointers of the blocks.
+        // adjust c_blk and n_blk
+        // return c_blk of new blk
+        printf("Found a block of size %d\n", bestFit);
+        struct h_Node * newBlock = sbrk(sizeof(struct h_Node));
+        newBlock->STATUS = BLOCKED;
+        newBlock->SIZE = size;
+        newBlock->NEXT = allocBlock;
+        if(allocBlockPrev != NULL)
+            allocBlockPrev->NEXT = newBlock;
+        else
+            Heap->head=newBlock;
+        newBlock->c_blk = (char*)allocBlock->c_blk;
+        newBlock->n_blk = allocBlock->c_blk + size;
+        allocBlock->c_blk = newBlock->n_blk;
+        allocBlock->SIZE -=size;
+        printf("Created new header in malloc\n");
+        return newBlock->c_blk;
+    }
+    else{
+        // couldn't find a space on the heap.
+        printf("Couldn't find a block of size %d\n", size);
+        return NULL;
+    }
+    
 }
 
 void m_free(void* ptr) {
@@ -78,6 +132,8 @@ void* m_realloc(void* ptr, size_t size) {
      * overlap with the other allocated blocks.
      * This method changes the size of the old block pointed to by ptr. The address of the new ptr could be the same as the old ptr or be different. Note that the content of the common parts between the old and the new blocks should be the same. For example if the old block has the size=200 bytes and the new block has the size=250 bytes, this means that the first 200 bytes of both blocks are the same (actually the old block will be replaced by the new one, but the contents should be kept for the common size).
      */
+    m_free(ptr);
+    return m_malloc(size);
 }
 
 void h_layout(struct h_Node* head) {
@@ -104,11 +160,44 @@ int m_check(void) {
     /* check if the next and/or previous blocks are free to join them with the current block, after a free method called for the current block (the Coalescing concept).
      * It returns 0 for a successful consistency checking of the Heap, and returns -1 (or none zero) in case of any problems
      */
+    
     return 0;
 }
 
 int main(){
     int return_val = m_init();
-    printf ("\nPrinting Heap Layout\n\n");
+    printf ("\nPrinting Original Heap Layout\n\n");
+    h_layout(Heap->head);
+    char  *pt1 = m_malloc(2000);
+    printf ("\nPrinting Heap Layout after first malloc\n\n");
+    h_layout(Heap->head);       
+    char  *pt2 = m_malloc(500);
+    printf ("\nPrinting Heap Layout after second malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt3 = m_malloc(300);
+    printf ("\nPrinting Heap Layout after third malloc\n\n");
+    h_layout(Heap->head);
+    // m_free(pt2);
+    // h_layout(Heap->head);
+    char  *pt4 = m_malloc(1500);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt5 = m_malloc(1500);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt6 = m_malloc(1500);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt7 = m_malloc(1500);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt8 = m_malloc(1500);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt9 = m_malloc(150);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt10 = m_malloc(01);
+    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
     h_layout(Heap->head);
 }
