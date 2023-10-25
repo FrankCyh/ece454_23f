@@ -64,8 +64,8 @@ struct h_Node * isValidPtr(void* ptr, struct h_Node *head){
     while(temp!=NULL){
         if(temp->c_blk == ptr){
             if(temp->STATUS == FREE){
-                printf("\nTrying to free an already free block\n");
-                printf("Invalid ptr to free\n");
+                printf("Trying to free an already free block\n");
+                printf("Invalid ptr to free\n\n");
                 return NULL;
             }
             else
@@ -75,7 +75,7 @@ struct h_Node * isValidPtr(void* ptr, struct h_Node *head){
         temp = temp->NEXT;
     }
     if(temp == NULL){
-        printf("\nInvalid ptr to free\n");
+        printf("Invalid ptr to free\n\n");
     }
     return temp;
 }
@@ -130,7 +130,7 @@ void* m_malloc(size_t size) {
                 allocBlockPrev->NEXT = newBlock;
             else
                 Heap->head=newBlock;
-            newBlock->c_blk = (char*)allocBlock->c_blk;
+            newBlock->c_blk = allocBlock->c_blk;
             newBlock->n_blk = allocBlock->c_blk + size;
             allocBlock->c_blk = newBlock->n_blk;
             allocBlock->SIZE -=size;
@@ -241,69 +241,92 @@ int m_check(void) {
     /* check if the next and/or previous blocks are free to join them with the current block, after a free method called for the current block (the Coalescing concept).
      * It returns 0 for a successful consistency checking of the Heap, and returns -1 (or none zero) in case of any problems
      */
-    
+    struct h_Node* temp = Heap->head;
+    struct h_Node* prev = NULL;
+    while(temp!=NULL){
+        if(temp->STATUS == FREE){
+            if(((prev!=NULL) && (prev->STATUS == FREE)) || ((temp->NEXT != NULL) && (temp->NEXT->STATUS == FREE))){
+                return -1;
+            }
+        }
+        prev = temp;
+        temp = temp->NEXT;
+    }
     return 0;
 }
 
 int main(){
     int return_val = m_init();
+    int check;
     printf ("\nPrinting Original Heap Layout\n\n");
     h_layout(Heap->head);
+    printf ("\nchar* pt1=m_malloc(2000)\n\n");
     char  *pt1 = m_malloc(2000);
-    printf ("\nPrinting Heap Layout after first malloc\n\n");
     h_layout(Heap->head);       
+    printf ("\nm_free(pt1)\n\n");
     m_free(pt1);
-    printf ("\nPrinting Heap Layout after first free\n\n");
     h_layout(Heap->head);
+    check = m_check();
+    if(check == -1){
+        printf("\nERROR: m_check failed\n");
+    }
+    else
+        printf("\nSUCCESS: m_check passed\n");
+    printf ("\nm_free(pt1)\n\n");
     m_free(pt1);
-    printf ("\nPrinting Heap Layout after second free\n\n");
     h_layout(Heap->head);
+    printf ("\nchar * pt2 = m_malloc(500)\n\n");
     char  *pt2 = m_malloc(500);
-    printf ("\nPrinting Heap Layout after second malloc\n\n");
     h_layout(Heap->head);
+    printf ("\n char *pt3 = m_malloc(300)\n\n");
     char  *pt3 = m_malloc(300);
-    printf ("\nPrinting Heap Layout after third malloc\n\n");
     h_layout(Heap->head);
     // m_free(pt2);
     // h_layout(Heap->head);
+    printf ("\nchar *pt4 = m_malloc(1500)\n\n");
     char  *pt4 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
     h_layout(Heap->head);
     // m_free(pt4);
     // printf ("\nPrinting Heap Layout after third free\n\n");
     // h_layout(Heap->head);
+    printf ("\nchar *pt5 = m_malloc(1500)\n\n");
     char  *pt5 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fifth malloc\n\n");
     h_layout(Heap->head);
+    printf ("\nchar *pt6 = m_malloc(1500)\n\n");
     char  *pt6 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after sixth malloc\n\n");
     h_layout(Heap->head);
+    printf ("\nm_free(pt5)\n\n");
     m_free(pt5);
-    printf ("\nPrinting Heap Layout after third free\n\n");
     h_layout(Heap->head);
+    printf ("\nchar *pt7 = m_malloc(1600)\n\n");
     char  *pt7 = m_malloc(1600);
-    printf ("\nPrinting Heap Layout after seventh malloc\n\n");
     h_layout(Heap->head);
-    m_free(pt6);
-    printf ("\nPrinting Heap Layout after fourth free\n\n");
+    printf ("\npt7 = m_realloc(pt7, 1800)\n\n");
+    pt7 = m_realloc(pt7, 1800);
     h_layout(Heap->head);
-    char  *pt8 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after eighth malloc\n\n");
+    printf ("\npt3 = m_realloc(pt3, 500)\n\n");
+    pt3 = m_realloc(pt3, 500);
     h_layout(Heap->head);
-    char  *pt9 = m_malloc(150);
-    printf ("\nPrinting Heap Layout after ninth malloc\n\n");
-    h_layout(Heap->head);
-    char  *pt10 = m_malloc(01);
-    printf ("\nPrinting Heap Layout after tenth malloc\n\n");
-    h_layout(Heap->head);
-    char pt11;
-    m_free(pt11);
-    printf ("\nPrinting Heap Layout after last free\n\n");
-    h_layout(Heap->head);
-    char  *pt12 = m_malloc(1600);
-    printf ("\nPrinting Heap Layout after eleventh malloc\n\n");
-    h_layout(Heap->head);
-    char  *pt13 = m_malloc(1501);
-    printf ("\nPrinting Heap Layout after eleventh malloc\n\n");
-    h_layout(Heap->head);
+    // printf ("\nm_free(pt6)\n\n");
+    // m_free(pt6);
+    // h_layout(Heap->head);
+    // printf ("\nchar pt8 = m_malloc(1500)\n\n");
+    // char  *pt8 = m_malloc(1500);
+    // h_layout(Heap->head);
+    // printf ("\nchar *pt9 = m_malloc(150);\n\n");
+    // char  *pt9 = m_malloc(150);
+    // h_layout(Heap->head);
+    // printf ("\nchar  *pt10 = m_malloc(01)\n\n");
+    // char  *pt10 = m_malloc(01);
+    // h_layout(Heap->head);
+    // char pt11;
+    // printf ("\nchar pt11; m_free(pt11);\n\n");
+    // m_free(pt11);
+    // h_layout(Heap->head);
+    // printf ("\nchar *pt12 = m_malloc(1600)\n\n");
+    // char  *pt12 = m_malloc(1600);
+    // h_layout(Heap->head);
+    // printf ("\nchar *pt13 = m_malloc(1501)\n\n");
+    // char  *pt13 = m_malloc(1501);
+    // h_layout(Heap->head);
 }
