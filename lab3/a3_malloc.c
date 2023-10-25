@@ -51,10 +51,31 @@ int m_init(void) {
 struct h_Node * find_header_block(void* address, struct h_Node * head){
     struct h_Node* temp = head;
     while(temp!=NULL){
-        if(temp->c_blk == address){
+        if(temp->n_blk && temp->n_blk == address){
             break;
         }
         temp = temp->NEXT;
+    }
+    return temp;
+}
+
+struct h_Node * isValidPtr(void* ptr, struct h_Node *head){
+    struct h_Node* temp = head;
+    while(temp!=NULL){
+        if(temp->c_blk == ptr){
+            if(temp->STATUS == FREE){
+                printf("\nTrying to free an already free block\n");
+                printf("Invalid ptr to free\n");
+                return NULL;
+            }
+            else
+                break;
+            
+        }
+        temp = temp->NEXT;
+    }
+    if(temp == NULL){
+        printf("\nInvalid ptr to free\n");
     }
     return temp;
 }
@@ -95,25 +116,31 @@ void* m_malloc(size_t size) {
         // adjust next pointers of the blocks.
         // adjust c_blk and n_blk
         // return c_blk of new blk
-        printf("Found a block of size %d\n", bestFit);
-        struct h_Node * newBlock = sbrk(sizeof(struct h_Node));
-        newBlock->STATUS = BLOCKED;
-        newBlock->SIZE = size;
-        newBlock->NEXT = allocBlock;
-        if(allocBlockPrev != NULL)
-            allocBlockPrev->NEXT = newBlock;
-        else
-            Heap->head=newBlock;
-        newBlock->c_blk = (char*)allocBlock->c_blk;
-        newBlock->n_blk = allocBlock->c_blk + size;
-        allocBlock->c_blk = newBlock->n_blk;
-        allocBlock->SIZE -=size;
-        printf("Created new header in malloc\n");
-        return newBlock->c_blk;
+        // printf("Found a block of size %d\n", bestFit);
+        if(bestFit == size){
+            allocBlock->STATUS = BLOCKED;
+            return allocBlock->c_blk;
+        }
+        else{
+            struct h_Node * newBlock = sbrk(sizeof(struct h_Node));
+            newBlock->STATUS = BLOCKED;
+            newBlock->SIZE = size;
+            newBlock->NEXT = allocBlock;
+            if(allocBlockPrev != NULL)
+                allocBlockPrev->NEXT = newBlock;
+            else
+                Heap->head=newBlock;
+            newBlock->c_blk = (char*)allocBlock->c_blk;
+            newBlock->n_blk = allocBlock->c_blk + size;
+            allocBlock->c_blk = newBlock->n_blk;
+            allocBlock->SIZE -=size;
+            // printf("Created new header in malloc\n");
+            return newBlock->c_blk;
+        }
     }
     else{
         // couldn't find a space on the heap.
-        printf("Couldn't find a block of size %d\n", size);
+        printf("\nCouldn't find a block of size %d\n", size);
         return NULL;
     }
     
@@ -126,6 +153,60 @@ void m_free(void* ptr) {
      * meaning that the `m_free(ptr)` should be called following a call to `m_malloc()` or `m_realloc()` that already generated its ptr parameter.
      * Like the real `free()` method, the `m_fee()` should set the allocated block as a free block now, and this should be done by modifying the information in the relevant h_Node of that block.Moreover, it should also check if the previous and / or next blocks are free or not, and if yes, join them to the current free block to make a bigger free block and finally update all the relevant `h_Nodes`.
      */
+    // printf("In free 1\n");
+    // Need to add functionality to handle invalid ptr
+    struct h_Node * legal = isValidPtr(ptr,Heap->head);
+    if(legal == NULL)
+        return;
+    // printf("In free 2\n");
+    struct h_Node * blockToFreePred = find_header_block(ptr,Heap->head);
+    if (blockToFreePred == NULL){
+        // need to delete head block
+        struct h_Node * head = Heap->head;
+        head->STATUS = FREE;
+        struct h_Node * next = head->NEXT;
+        // if next block is free, coallace.
+        if(next->STATUS == FREE){
+            head->SIZE += next->SIZE;
+            head->n_blk = next->n_blk;
+            head->NEXT = next->NEXT;
+            next = NULL;
+        }
+        // else we are done
+    }
+    else{
+        // need to delete block in the middle or end
+        struct h_Node * toFree = blockToFreePred->NEXT;
+        toFree->STATUS = FREE;
+
+        // see if can coallace with pred & succ
+        if(blockToFreePred->STATUS == FREE && toFree->NEXT->STATUS ==FREE){
+            struct h_Node * next = toFree->NEXT;
+            blockToFreePred->SIZE += toFree->SIZE;
+            blockToFreePred->SIZE += next->SIZE;
+            blockToFreePred->n_blk = next->n_blk;
+            blockToFreePred->NEXT = next->NEXT;
+            next = NULL;
+            toFree = NULL;
+        }
+        // see if can coallace with just pred
+        else if(blockToFreePred->STATUS == FREE){
+            blockToFreePred->SIZE += toFree->SIZE;
+            blockToFreePred->n_blk = toFree->n_blk;
+            blockToFreePred->NEXT = toFree->NEXT;
+            toFree = NULL;
+        }
+        // see if can coallace with just succ
+        else if(toFree->NEXT->STATUS == FREE){
+            struct h_Node * next = toFree->NEXT;
+            toFree->SIZE += next->SIZE;
+            toFree->n_blk = next->n_blk;
+            toFree->NEXT = next->NEXT;
+            next = NULL;
+        }
+
+    }
+    ptr = NULL;
 }
 void* m_realloc(void* ptr, size_t size) {
     /* This method returns a pointer to the new allocated block in the Heap with size bytes (at least) after resizing an old block pointed to by ptr. This is an entire separated block within the Heap and should not have any
@@ -171,6 +252,12 @@ int main(){
     char  *pt1 = m_malloc(2000);
     printf ("\nPrinting Heap Layout after first malloc\n\n");
     h_layout(Heap->head);       
+    m_free(pt1);
+    printf ("\nPrinting Heap Layout after first free\n\n");
+    h_layout(Heap->head);
+    m_free(pt1);
+    printf ("\nPrinting Heap Layout after second free\n\n");
+    h_layout(Heap->head);
     char  *pt2 = m_malloc(500);
     printf ("\nPrinting Heap Layout after second malloc\n\n");
     h_layout(Heap->head);
@@ -182,22 +269,41 @@ int main(){
     char  *pt4 = m_malloc(1500);
     printf ("\nPrinting Heap Layout after fourth malloc\n\n");
     h_layout(Heap->head);
+    // m_free(pt4);
+    // printf ("\nPrinting Heap Layout after third free\n\n");
+    // h_layout(Heap->head);
     char  *pt5 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    printf ("\nPrinting Heap Layout after fifth malloc\n\n");
     h_layout(Heap->head);
     char  *pt6 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    printf ("\nPrinting Heap Layout after sixth malloc\n\n");
     h_layout(Heap->head);
-    char  *pt7 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    m_free(pt5);
+    printf ("\nPrinting Heap Layout after third free\n\n");
+    h_layout(Heap->head);
+    char  *pt7 = m_malloc(1600);
+    printf ("\nPrinting Heap Layout after seventh malloc\n\n");
+    h_layout(Heap->head);
+    m_free(pt6);
+    printf ("\nPrinting Heap Layout after fourth free\n\n");
     h_layout(Heap->head);
     char  *pt8 = m_malloc(1500);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    printf ("\nPrinting Heap Layout after eighth malloc\n\n");
     h_layout(Heap->head);
     char  *pt9 = m_malloc(150);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    printf ("\nPrinting Heap Layout after ninth malloc\n\n");
     h_layout(Heap->head);
     char  *pt10 = m_malloc(01);
-    printf ("\nPrinting Heap Layout after fourth malloc\n\n");
+    printf ("\nPrinting Heap Layout after tenth malloc\n\n");
+    h_layout(Heap->head);
+    char pt11;
+    m_free(pt11);
+    printf ("\nPrinting Heap Layout after last free\n\n");
+    h_layout(Heap->head);
+    char  *pt12 = m_malloc(1600);
+    printf ("\nPrinting Heap Layout after eleventh malloc\n\n");
+    h_layout(Heap->head);
+    char  *pt13 = m_malloc(1501);
+    printf ("\nPrinting Heap Layout after eleventh malloc\n\n");
     h_layout(Heap->head);
 }
