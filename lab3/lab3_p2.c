@@ -16,26 +16,26 @@ struct a_test2 {
 struct a_test2 *p2, *q2;
 
 struct a_test3 {
-    char c; // 1 byte
+    char c;  // 1 byte
     // 1 byte padding
-    short s; // 2 bytes
-    int k; // 4 bytes
-    long l; // 8 bytes
-    float f; // 4 bytes
+    short s;  // 2 bytes
+    int k;  // 4 bytes
+    long l;  // 8 bytes
+    float f;  // 4 bytes
     // 4 bytes padding
-    double d; // 8 bytes
+    double d;  // 8 bytes
     // `a_test3` size is 32 bytes
 } table3[10];
 struct a_test3 *p3, *q3;
 
 struct a_test4 {
     // Optimization technique: put larger size elements first and smaller size at last
-    double d; // 8 bytes
-    long l; // 8 bytes
-    float f; // 4 bytes
-    int k; // 4 bytes
-    short s; // 2 bytes
-    char c; // 1 byte
+    double d;  // 8 bytes
+    long l;  // 8 bytes
+    float f;  // 4 bytes
+    int k;  // 4 bytes
+    short s;  // 2 bytes
+    char c;  // 1 byte
     // 5 bytes padding
     // Variables above adds up to 27 bytes, so we need to add 5 bytes of padding to make it 32 bytes, because a_test4 has a alignment requirement of 8 bytes
     // `a_test4` size is 32 bytes
@@ -43,9 +43,7 @@ struct a_test4 {
 struct a_test4 *p4, *q4;
 
 char divider[100] = "----------------------------------------";
-void print_divider(char *msg) {
-    printf("\n%s %s %s\n", divider, msg, divider);
-}
+void print_divider(char *msg) { printf("\n%s %s %s\n", divider, msg, divider); }
 
 int main() {
     //# a_test1
@@ -66,18 +64,19 @@ int main() {
 
     // c-Print the alignment and address of table1[0]
     printf("\nc-Print the alignment and address of table1[0]\n");
-    printf("Alignment of table1[0] is %zu\n", _Alignof(table1[0]));  // not sure if this is correct
+    printf("Alignment of table1[0] is %zu\n", _Alignof(table1[0]));
 
     // d-In a loop, print the aligned addresses of the previous and the current elements in table1 (starting with table1[1]), and then the difference between their addresses showing the length of the previous element in the array
     printf("\nd-Show the length of an element in the array\n");
-    for(int i = 0; i < 9; i++){
-        printf("Address of `table1[%d]` is %p\n", i,&table1[i]);
-        printf("Address of `table1[%d]` is %p\n", i+1, &table1[i+1]);
-        printf("Length of `table1[%d]` is %d\n", i,(size_t)&table1[i+1] - (size_t)&table1[i]);
+    for (int i = 0; i < 9; i++) {
+        printf("Address of `table1[%d]` is %p\n", i, &table1[i]);
+        printf("Address of `table1[%d]` is %p\n", i + 1, &table1[i + 1]);
+        printf("Length of `table1[%d]` is %d\n", i, (size_t)&table1[i + 1] - (size_t)&table1[i]);
     }
     //# a_test2
     print_divider("a_test2");
-    // Apply the same instructions above (a-d) on the new a_test2 struct, //save the results in proper tables and describe about them in your report // your optimized structure will be compared with its initial format
+    // Apply the same instructions above (a-d) on the new a_test2 struct, 
+    //save the results in proper tables and describe about them in your report // your optimized structure will be compared with its initial format
 
     p2 = &table2[0];
 
@@ -94,14 +93,14 @@ int main() {
 
     // c-Print the alignment and address of table2[0]
     printf("\nc-Print the alignment and address of table2[0]\n");
-    printf("Alignment of table2[0] is %zu\n", _Alignof(table2[0]));  // not sure if this is correct
+    printf("Alignment of table2[0] is %zu\n", _Alignof(table2[0]));
 
     // d-In a loop, print the aligned addresses of the previous and the current elements in table2 (starting with table2[1]), and then the difference between their addresses showing the length of the previous element in the array
     printf("\nd-Show the length of an element in the array\n");
-    for(int i = 0; i < 9; i++){
-        printf("Address of `table2[%d]` is %p\n", i,&table2[i]);
-        printf("Address of `table2[%d]` is %p\n", i+1, &table2[i+1]);
-        printf("Length of `table2[%d]` is %d\n", i, (size_t)&table2[i+1] - (size_t)&table2[i]);
+    for (int i = 0; i < 9; i++) {
+        printf("Address of `table2[%d]` is %p\n", i, &table2[i]);
+        printf("Address of `table2[%d]` is %p\n", i + 1, &table2[i + 1]);
+        printf("Length of `table2[%d]` is %d\n", i, (size_t)&table2[i + 1] - (size_t)&table2[i]);
     }
 
     //# a_test3
@@ -124,14 +123,14 @@ int main() {
 
     // c-Print the alignment and address of table3[0]
     printf("\nc-Print the alignment and address of table3[0]\n");
-    printf("Alignment of table3[0] is %zu\n", _Alignof(table3[0]));  // not sure if this is correct
+    printf("Alignment of table3[0] is %zu\n", _Alignof(table3[0]));
 
     // d-In a loop, print the aligned addresses of the previous and the current elements in table3 (starting with table3[1]), and then the difference between their addresses showing the length of the previous element in the array
     printf("\nd-Show the length of an element in the array\n");
-   for(int i = 0; i < 9; i++){
-        printf("Address of `table3[%d]` is %p\n", i,&table3[i]);
-        printf("Address of `table3[%d]` is %p\n", i+1, &table3[i+1]);
-        printf("Length of `table3[%d]` is %d\n", i, (size_t)&table3[i+1] - (size_t)&table3[i]);
+    for (int i = 0; i < 9; i++) {
+        printf("Address of `table3[%d]` is %p\n", i, &table3[i]);
+        printf("Address of `table3[%d]` is %p\n", i + 1, &table3[i + 1]);
+        printf("Length of `table3[%d]` is %d\n", i, (size_t)&table3[i + 1] - (size_t)&table3[i]);
     }
     //# a_test4
     print_divider("a_test4");
@@ -153,14 +152,13 @@ int main() {
 
     // c-Print the alignment and address of table4[0]
     printf("\nc-Print the alignment and address of table4[0]\n");
-    printf("Alignment of table4[0] is %zu\n", _Alignof(table4[0]));  // not sure if this is correct
+    printf("Alignment of table4[0] is %zu\n", _Alignof(table4[0]));
 
     // d-In a loop, print the aligned addresses of the previous and the current elements in table4 (starting with table4[1]), and then the difference between their addresses showing the length of the previous element in the array
     printf("\nd-Show the length of an element in the array\n");
-    for(int i = 0; i < 9; i++){
-        printf("Address of `table4[%d]` is %p\n", i,&table4[i]);
-        printf("Address of `table4[%d]` is %p\n", i+1, &table4[i+1]);
-        printf("Length of `table4[%d]` is %d\n", i, (size_t)&table4[i+1] - (size_t)&table4[i]);
+    for (int i = 0; i < 9; i++) {
+        printf("Address of `table4[%d]` is %p\n", i, &table4[i]);
+        printf("Address of `table4[%d]` is %p\n", i + 1, &table4[i + 1]);
+        printf("Length of `table4[%d]` is %d\n", i, (size_t)&table4[i + 1] - (size_t)&table4[i]);
     }
-
 }

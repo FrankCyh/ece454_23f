@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
+		"code-runner.executorMap": {
+			"c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+		},
 		"files.associations": {
 			"*.sql": "postgres",
 			"CMakeLists.txt": "cmake",
