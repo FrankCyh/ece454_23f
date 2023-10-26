@@ -47,7 +47,8 @@ int m_init(void) {
     return 0;
 }
 
-// Linked List helper functions.
+// finds the header of predecessor block of the block that needs to be freed
+// input parameters: address to be freed and head of the linked list of headers
 struct h_Node * find_header_block(void* address, struct h_Node * head){
     struct h_Node* temp = head;
     while(temp!=NULL){
@@ -59,6 +60,8 @@ struct h_Node * find_header_block(void* address, struct h_Node * head){
     return temp;
 }
 
+// checks if ptr passed to free is valid
+// input parameters: address to be freed and head of the linked list of headers
 struct h_Node * isValidPtr(void* ptr, struct h_Node *head){
     struct h_Node* temp = head;
     while(temp!=NULL){
@@ -80,6 +83,7 @@ struct h_Node * isValidPtr(void* ptr, struct h_Node *head){
     return temp;
 }
 
+// best fit algo. Find the free block closest to the request size.
 void* m_malloc(size_t size) {
     /* This method returns a pointer to the allocated block in the Heap with size bytes (at least). This is an entire separated block within the Heap and should not have any overlap with the other allocated blocks.
      * The method should search to find the best fit in the Heap for that given size and allocate it. In this process the memory has already been divided into various size of blocks. To manage these blocks a mechanism is provided at section 3.1.3 using a linked-list. Each node in this linked-list, naming h_Node, is connected to a block in the Heap and contains its information. Thus for tracking the information about each block, its relevant h_Node should be checked.
@@ -140,12 +144,12 @@ void* m_malloc(size_t size) {
     }
     else{
         // couldn't find a space on the heap.
-        printf("\nCouldn't find a block of size %d\n", size);
+        printf("Couldn't find a block of size %d\n\n", size);
         return NULL;
     }
     
 }
-
+// free the block starting at ptr and coallace with the surrounding free blocks if any
 void m_free(void* ptr) {
     /*
      * This method returns the allocated block pointed to by ptr to the free space of the Heap.
@@ -154,12 +158,11 @@ void m_free(void* ptr) {
      * Like the real `free()` method, the `m_fee()` should set the allocated block as a free block now, and this should be done by modifying the information in the relevant h_Node of that block.Moreover, it should also check if the previous and / or next blocks are free or not, and if yes, join them to the current free block to make a bigger free block and finally update all the relevant `h_Nodes`.
      */
     // printf("In free 1\n");
-    // Need to add functionality to handle invalid ptr
-    struct h_Node * legal = isValidPtr(ptr,Heap->head);
+    struct h_Node * legal = isValidPtr(ptr,Heap->head); // checks if ptr is on the heap and if it is already free or not
     if(legal == NULL)
         return;
     // printf("In free 2\n");
-    struct h_Node * blockToFreePred = find_header_block(ptr,Heap->head);
+    struct h_Node * blockToFreePred = find_header_block(ptr,Heap->head); // This gives the header of the predecessor of the block we are trying to delete
     if (blockToFreePred == NULL){
         // need to delete head block
         struct h_Node * head = Heap->head;
@@ -208,6 +211,7 @@ void m_free(void* ptr) {
     }
     ptr = NULL;
 }
+
 void* m_realloc(void* ptr, size_t size) {
     /* This method returns a pointer to the new allocated block in the Heap with size bytes (at least) after resizing an old block pointed to by ptr. This is an entire separated block within the Heap and should not have any
      * overlap with the other allocated blocks.
@@ -217,6 +221,7 @@ void* m_realloc(void* ptr, size_t size) {
     return m_malloc(size);
 }
 
+//input parameter is the head of the linked lists of headers
 void h_layout(struct h_Node* head) {
     /* display the layout of the Heap after each modification */
     struct h_Node* temp = head;
@@ -255,78 +260,143 @@ int m_check(void) {
     return 0;
 }
 
-int main(){
+int main(int argc, char *argv){
     int return_val = m_init();
     int check;
     printf ("\nPrinting Original Heap Layout\n\n");
     h_layout(Heap->head);
-    printf ("\nchar* pt1=m_malloc(2000)\n\n");
-    char  *pt1 = m_malloc(2000);
-    h_layout(Heap->head);       
-    printf ("\nm_free(pt1)\n\n");
-    m_free(pt1);
-    h_layout(Heap->head);
-    check = m_check();
-    if(check == -1){
-        printf("\nERROR: m_check failed\n");
+
+    //driver 1
+    if(argc == 1){
+        printf ("\nchar* pt1=m_malloc(2000)\n\n");
+        char *pt1 = m_malloc(2000);
+        h_layout(Heap->head);
+        printf ("\nchar * pt2 = m_malloc(500)\n\n");
+        char *pt2 = m_malloc(500);
+        h_layout(Heap->head);  
+        printf ("\n char *pt3 = m_malloc(300)\n\n");
+        char *pt3 = m_malloc(300); 
+        h_layout(Heap->head); 
+        printf ("\nm_free(pt2)\n\n");
+        m_free(pt2); 
+        h_layout(Heap->head); 
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\nchar *pt4 = m_malloc(1500)\n\n");
+        char  *pt4 = m_malloc(1500);
+        h_layout(Heap->head); 
     }
-    else
-        printf("\nSUCCESS: m_check passed\n");
-    printf ("\nm_free(pt1)\n\n");
-    m_free(pt1);
-    h_layout(Heap->head);
-    printf ("\nchar * pt2 = m_malloc(500)\n\n");
-    char  *pt2 = m_malloc(500);
-    h_layout(Heap->head);
-    printf ("\n char *pt3 = m_malloc(300)\n\n");
-    char  *pt3 = m_malloc(300);
-    h_layout(Heap->head);
-    // m_free(pt2);
-    // h_layout(Heap->head);
-    printf ("\nchar *pt4 = m_malloc(1500)\n\n");
-    char  *pt4 = m_malloc(1500);
-    h_layout(Heap->head);
-    // m_free(pt4);
-    // printf ("\nPrinting Heap Layout after third free\n\n");
-    // h_layout(Heap->head);
-    printf ("\nchar *pt5 = m_malloc(1500)\n\n");
-    char  *pt5 = m_malloc(1500);
-    h_layout(Heap->head);
-    printf ("\nchar *pt6 = m_malloc(1500)\n\n");
-    char  *pt6 = m_malloc(1500);
-    h_layout(Heap->head);
-    printf ("\nm_free(pt5)\n\n");
-    m_free(pt5);
-    h_layout(Heap->head);
-    printf ("\nchar *pt7 = m_malloc(1600)\n\n");
-    char  *pt7 = m_malloc(1600);
-    h_layout(Heap->head);
-    printf ("\npt7 = m_realloc(pt7, 1800)\n\n");
-    pt7 = m_realloc(pt7, 1800);
-    h_layout(Heap->head);
-    printf ("\npt3 = m_realloc(pt3, 500)\n\n");
-    pt3 = m_realloc(pt3, 500);
-    h_layout(Heap->head);
-    // printf ("\nm_free(pt6)\n\n");
-    // m_free(pt6);
-    // h_layout(Heap->head);
-    // printf ("\nchar pt8 = m_malloc(1500)\n\n");
-    // char  *pt8 = m_malloc(1500);
-    // h_layout(Heap->head);
-    // printf ("\nchar *pt9 = m_malloc(150);\n\n");
-    // char  *pt9 = m_malloc(150);
-    // h_layout(Heap->head);
-    // printf ("\nchar  *pt10 = m_malloc(01)\n\n");
-    // char  *pt10 = m_malloc(01);
-    // h_layout(Heap->head);
-    // char pt11;
-    // printf ("\nchar pt11; m_free(pt11);\n\n");
-    // m_free(pt11);
-    // h_layout(Heap->head);
-    // printf ("\nchar *pt12 = m_malloc(1600)\n\n");
-    // char  *pt12 = m_malloc(1600);
-    // h_layout(Heap->head);
-    // printf ("\nchar *pt13 = m_malloc(1501)\n\n");
-    // char  *pt13 = m_malloc(1501);
-    // h_layout(Heap->head);
+
+    //driver 2
+    if(argc == 2){
+        printf ("\nchar* pt1=m_malloc(2000)\n\n");
+        char  *pt1 = m_malloc(2000);
+        h_layout(Heap->head);       
+        printf ("\nm_free(pt1)\n\n");
+        m_free(pt1);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\nm_free(pt1)\n\n");
+        m_free(pt1);
+        h_layout(Heap->head);
+        printf ("\nchar * pt2 = m_malloc(500)\n\n");
+        char  *pt2 = m_malloc(500);
+        h_layout(Heap->head);
+        printf ("\nchar *pt3 = m_malloc(300)\n\n");
+        char  *pt3 = m_malloc(300);
+        h_layout(Heap->head);
+        printf ("\nchar *pt4 = m_malloc(1500)\n\n");
+        char  *pt4 = m_malloc(1500);
+        h_layout(Heap->head);
+        printf ("\nchar *pt5 = m_malloc(1500)\n\n");
+        char  *pt5 = m_malloc(1500);
+        h_layout(Heap->head);
+        printf ("\nchar *pt6 = m_malloc(1500)\n\n");
+        char  *pt6 = m_malloc(1500);
+        h_layout(Heap->head);
+        printf ("\nm_free(pt5)\n\n");
+        m_free(pt5);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\nchar *pt7 = m_malloc(1600)\n\n");
+        char  *pt7 = m_malloc(1600);
+        h_layout(Heap->head);
+        printf ("\npt7 = m_realloc(pt7, 1800)\n\n");
+        pt7 = m_realloc(pt7, 1800);
+        h_layout(Heap->head);
+        printf ("\npt3 = m_realloc(pt3, 500)\n\n");
+        pt3 = m_realloc(pt3, 500);
+        h_layout(Heap->head);
+        printf ("\nm_free(pt6)\n\n");
+        m_free(pt6);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+    }
+    // driver 3
+    if(argc == 3){
+        printf ("\nchar pt8 = m_malloc(1500)\n\n");
+        char  *pt8 = m_malloc(1500);
+        h_layout(Heap->head);
+        printf ("\nchar *pt9 = m_malloc(150);\n\n");
+        char  *pt9 = m_malloc(150);
+        h_layout(Heap->head);
+        printf ("\nchar  *pt10 = m_malloc(01)\n\n");
+        char  *pt10 = m_malloc(01);
+        h_layout(Heap->head);
+        char pt11;
+        printf ("\nchar pt11; m_free(pt11);\n\n");
+        m_free(pt11);
+        h_layout(Heap->head);
+        check = m_check();
+        printf ("\nchar *pt12 = m_malloc(1600)\n\n");
+        char  *pt12 = m_malloc(1600);
+        h_layout(Heap->head);
+        printf ("\nm_free(p8);\n\n");
+        m_free(pt8);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\npt9 = m_realloc(pt9, 500)\n\n");
+        pt9 = m_realloc(pt9, 500);
+        h_layout(Heap->head);
+        printf ("\nchar *pt13 = m_malloc(9900)\n\n");
+        char  *pt13 = m_malloc(9900);
+        h_layout(Heap->head);
+        printf ("\nm_free(p12);\n\n");
+        m_free(pt12);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\nm_free(p10);\n\n");
+        m_free(pt10);
+        h_layout(Heap->head);
+        check = m_check();
+        if(check == -1)
+            printf("\nERROR: m_check failed\n");
+        else
+            printf("\nSUCCESS: m_check passed\n");
+        printf ("\nm_free(p12);\n\n");
+    }
+
 }
