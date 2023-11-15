@@ -1,41 +1,40 @@
 Semaphore initialized to 3
-Teller 0: Customer 1
+Teller 1: Customer 1
         Starts  : 0
-        Duration: 2.098
-        Ends    : 2.098
-Teller 1: Customer 2
+        Duration: 4.542
+        Ends    : 4.542
+Teller 2: Customer 2
         Starts  : 0
-        Duration: 4.341
-        Ends    : 4.341
-Teller 2: Customer 3
+        Duration: 4.58
+        Ends    : 4.58
+Teller 3: Customer 3
         Starts  : 0
-        Duration: 2.081
-        Ends    : 2.081
-Teller 2: Customer 4
-        Starts  : 2.081
-        Duration: 3.19
-        Ends    : 5.271
-Teller 0: Customer 5
-        Starts  : 2.098
-        Duration: 4.992
-        Ends    : 7.09
-Teller 1: Customer 6
-        Starts  : 4.341
-        Duration: 1.413
-        Ends    : 5.754
+        Duration: 4.594
+        Ends    : 4.594
+Teller 1: Customer 4
+        Starts  : 4.542
+        Duration: 2.576
+        Ends    : 7.118
+Teller 2: Customer 5
+        Starts  : 4.58
+        Duration: 1.096
+        Ends    : 5.676
+Teller 3: Customer 6
+        Starts  : 4.594
+        Duration: 2.721
+        Ends    : 7.315
 Teller 2: Customer 7
-        Starts  : 5.271
-        Duration: 1.865
-        Ends    : 7.136
+        Starts  : 5.676
+        Duration: 3.376
+        Ends    : 9.052
 Teller 1: Customer 8
-        Starts  : 5.754
-        Duration: 1.082
-        Ends    : 6.836
-Teller 1: Customer 9
-        Starts  : 6.836
-        Duration: 3.398
-        Ends    : 10.234
-Teller 0: Customer 10
-        Starts  : 7.09
-        Duration: 2.789
-        Ends    : 9.879
+        Starts  : 7.118
+        Duration: 4.73
+        Ends    : 11.848
+Teller 3: Customer 9
+        Starts  : 7.315
+        Duration: 1.119
+        Ends    : 8.434
+Teller 3: Customer 10
+        Starts  : 8.434
+        Duration: 2.649

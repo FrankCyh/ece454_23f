@@ -47,7 +47,9 @@ public:
 
 class Customer {
 public:
-    Customer(int id) { this->id = id; }
+    Customer(int id) {
+        this->id = id;
+    }
     int id;
 };
 
@@ -58,9 +60,15 @@ public:
         sem_init(&sem, 0, count);
         cout << "Semaphore initialized to " << count << endl;
     }
-    ~Semaphore() { sem_destroy(&sem); }
-    void wait() { sem_wait(&sem); }
-    void signal() { sem_post(&sem); }
+    ~Semaphore() {
+        sem_destroy(&sem);
+    }
+    void wait() {
+        sem_wait(&sem);
+    }
+    void signal() {
+        sem_post(&sem);
+    }
 
 private:
     sem_t sem;
@@ -79,10 +87,13 @@ public:
             customer_q.push(Customer(i));
         }
     }
-
+    
     void serveAllCustomer() {
+        /** Serve all customers in the queue
+         */
         while (!customer_q.empty()) {
             // Wait for an available teller
+            // displayQueueResource();
             teller_semaphore.wait();
 
             // Find an available teller
@@ -107,9 +118,12 @@ public:
 
 
     void serveCustomer(int teller_idx, Customer customer) {
+        /** Serve a customer by a teller `teller_idx` with a random service time
+         */
+
         // Generate a random service time
         int service_time_in_ms = rand() % 4000 + 1000;  // service time 1 to 5 seconds
-        cout << "Teller " << teller_v[teller_idx].id << ": Customer " << customer.id + 1 << endl;
+        cout << "Teller " << teller_v[teller_idx].id + 1 << ": Customer " << customer.id + 1 << endl;
         cout << "\tStarts  : " << teller_v[teller_idx].finish_time << endl;
         cout << "\tDuration: " << double(service_time_in_ms) / 1000 << endl;
         teller_v[teller_idx].finish_time += double(service_time_in_ms) / 1000;
@@ -123,21 +137,32 @@ public:
         teller_semaphore.signal();
     }
 
+    void displayQueueResource() {
+        int avail_teller_count = 0;  
+        for (auto teller : teller_v) {
+            if (teller.available) {
+                cout << "Teller " << teller.id + 1 << " is available" << endl;
+                avail_teller_count ++;
+            }
+        }
+        cout << "Number of available tellers: " << avail_teller_count << endl;
+        cout << "Number of customers in queue: " << customer_q.size() << endl;
+    }
+
 private:
     vector<Teller> teller_v;
     queue<Customer> customer_q;
-    Semaphore teller_semaphore = Semaphore(3);
+    Semaphore teller_semaphore = Semaphore(3); // We have 3 tellers
 };
 
 int main() {
     srand(time(NULL));
-    
+
     // Initialize the banking system
     BankingSystem bankingSystem;
 
     // Begin operation
-    thread t(&BankingSystem::serveAllCustomer, &bankingSystem);
-    t.join();
+    bankingSystem.serveAllCustomer();
 
     return 0;
 }
