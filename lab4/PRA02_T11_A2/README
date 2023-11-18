@@ -1,5 +1,0 @@
-How to run and test your program completely:
-Compile: `make`
-Run: ./lab4
-
-The results can be verified through the output.
