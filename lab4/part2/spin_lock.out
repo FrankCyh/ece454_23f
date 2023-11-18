@@ -1,0 +1,35 @@
+Thread 0 - Spin Time: 0.000176ms, Total Time: 5.08781ms
+Thread 1 - Spin Time: 15.2247ms, Total Time: 20.3228ms
+Thread 2 - Spin Time: 10.1324ms, Total Time: 15.2014ms
+Thread 3 - Spin Time: 20.2811ms, Total Time: 25.3599ms
+Thread 4 - Spin Time: 5.03571ms, Total Time: 10.1052ms
+-------------------
+Thread 0 - Spin Time: 0.000111ms, Total Time: 5.09017ms
+Thread 1 - Spin Time: 20.2789ms, Total Time: 25.3671ms
+Thread 2 - Spin Time: 10.1165ms, Total Time: 15.1724ms
+Thread 3 - Spin Time: 5.08338ms, Total Time: 10.158ms
+Thread 4 - Spin Time: 15.1548ms, Total Time: 20.2244ms
+-------------------
+Thread 0 - Spin Time: 0.000369ms, Total Time: 5.05886ms
+Thread 1 - Spin Time: 10.0803ms, Total Time: 15.191ms
+Thread 2 - Spin Time: 20.2365ms, Total Time: 25.3344ms
+Thread 3 - Spin Time: 5.03111ms, Total Time: 10.0979ms
+Thread 4 - Spin Time: 15.181ms, Total Time: 20.27ms
+-------------------
+Thread 0 - Spin Time: 10.1228ms, Total Time: 15.212ms
+Thread 1 - Spin Time: 20.2531ms, Total Time: 25.3432ms
+Thread 2 - Spin Time: 0.000103ms, Total Time: 5.06549ms
+Thread 3 - Spin Time: 15.2252ms, Total Time: 20.303ms
+Thread 4 - Spin Time: 5.03069ms, Total Time: 10.1122ms
+-------------------
+Thread 0 - Spin Time: 0.000106ms, Total Time: 5.05971ms
+Thread 1 - Spin Time: 15.1267ms, Total Time: 20.2154ms
+Thread 2 - Spin Time: 20.2152ms, Total Time: 25.3139ms
+Thread 3 - Spin Time: 10.1127ms, Total Time: 15.1701ms
+Thread 4 - Spin Time: 4.9903ms, Total Time: 10.0501ms
+-------------------
+Thread 0 - Average Spin Time: 2.02471ms, Average Total Time: 7.10171ms
+Thread 1 - Average Spin Time: 16.1927ms, Average Total Time: 21.2879ms
+Thread 2 - Average Spin Time: 12.1401ms, Average Total Time: 17.2175ms
+Thread 3 - Average Spin Time: 11.1467ms, Average Total Time: 16.2178ms
+Thread 4 - Average Spin Time: 9.0785ms, Average Total Time: 14.1524ms
