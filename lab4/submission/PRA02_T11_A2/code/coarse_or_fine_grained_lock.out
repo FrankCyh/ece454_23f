@@ -1,0 +1,64 @@
+Coarse-grained lock
+List: 40 50 100 120 160 180 
+List locked (coarse) for node with value 65
+List locked (coarse) for node with value 77
+Coarse-grained locking time: 119 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+List locked (coarse) for node with value 65
+List locked (coarse) for node with value 77
+Coarse-grained locking time: 136 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+List locked (coarse) for node with value 77
+List locked (coarse) for node with value 65
+Coarse-grained locking time: 103 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+List locked (coarse) for node with value 65
+List locked (coarse) for node with value 77
+Coarse-grained locking time: 82 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+List locked (coarse) for node with value 65
+List locked (coarse) for node with value 77
+Coarse-grained locking time: 71 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+
+
+Fine-grained lock
+List: 40 50 100 120 160 180 
+Node 65 locked (fine)
+Node 77 locked (fine)
+Fine-grained locking time: 74 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+Node 65 locked (fine)
+Node 77 locked (fine)
+Fine-grained locking time: 67 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+Node 65 locked (fine)
+Node 77 locked (fine)
+Fine-grained locking time: 82 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+Node 65 locked (fine)
+Node 77 locked (fine)
+Fine-grained locking time: 52 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
+List: 40 50 100 120 160 180 
+Node 65 locked (fine)
+Node 77 locked (fine)
+Fine-grained locking time: 74 us
+List: 40 50 65 77 100 120 160 180 
+-------------------
