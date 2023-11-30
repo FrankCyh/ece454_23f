@@ -3,6 +3,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 struct MovieInfo {
     std::string movieName;
@@ -10,26 +11,31 @@ struct MovieInfo {
     MovieInfo* next; // Pointer for linked list
 };
 
+std::vector<std::string> movieNames = {"Inception", "Titanic", "Avatar", "The Shawshank Redemption", "The Godfather"};
+
 std::unordered_map<std::string, MovieInfo*> hashTables[4]; // Hash tables for Input1 to Input4
 
 void map(int inputIndex, std::string line, std::string movie_name_input) {
-    if (line.find(movie_name_input) != std::string::npos) {
-        // Extract movie name and movie info
-        std::string movieName, movieInfo;
-        movieName = movie_name_input;
-        movieInfo = line;
+    for(int i = 0; i < movieNames.size(); i++){
+        if (line.find(movieNames[i]) != std::string::npos) {
+            // Extract movie name and movie info
+            std::string movieName, movieInfo;
+            movieName = movieNames[i];
+            movieInfo = line;
 
-        // Create a new MovieInfo node
-        MovieInfo* newNode = new MovieInfo{movieName, movieInfo, nullptr};
+            // Create a new MovieInfo node
+            MovieInfo* newNode = new MovieInfo{movieName, movieInfo, nullptr};
 
-        // Insert into the corresponding hash table
-        if (hashTables[inputIndex].find(movieName) == hashTables[inputIndex].end()) {
-            // If movieName is not in the hash table, create a new entry
-            hashTables[inputIndex][movieName] = newNode;
-        } else {
-            // If movieName is already in the hash table, add to the linked list
-            newNode->next = hashTables[inputIndex][movieName];
-            hashTables[inputIndex][movieName] = newNode;
+            // Insert into the corresponding hash table
+            if (hashTables[inputIndex].find(movieName) == hashTables[inputIndex].end()) {
+                // If movieName is not in the hash table, create a new entry
+                hashTables[inputIndex][movieName] = newNode;
+            } else {
+                // If movieName is already in the hash table, add to the linked list
+                newNode->next = hashTables[inputIndex][movieName];
+                hashTables[inputIndex][movieName] = newNode;
+            }
+            break;
         }
     }
 }
@@ -95,9 +101,9 @@ void processInputFile(int inputIndex, std::string filename, std::string movie_na
 
 int main() {
     // Process each input file
-    std::cout << "Enter Movie Name\n";
+    // std::cout << "Enter Movie Name\n";
     std::string movie_name_input;
-    getline(std::cin, movie_name_input);
+    // getline(std::cin, movie_name_input);
     for (int i = 0; i < 4; ++i) {
         std::string filename = "random_movie_text_" + std::to_string(i + 1) + ".txt";
         processInputFile(i, filename, movie_name_input);
