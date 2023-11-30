@@ -1,9 +1,9 @@
-#include <iostream>
-#include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include <vector>
+#include <fstream>
+#include <iostream>
 #include <string>
+#include <vector>
 
 std::vector<std::string> movieNames = {"Inception", "Titanic", "Avatar", "The Shawshank Redemption", "The Godfather"};
 
@@ -32,6 +32,7 @@ std::string getRandomLine() {
 }
 
 void generateRandomTextFiles(int numFiles = 4, int linesPerFile = 15000) {
+    /* Generate `numFiles` random text files containing `linesPerFile` lines with equal possibility of containing movie sentence or random sentence. */
     for (int fileIndex = 1; fileIndex <= numFiles; ++fileIndex) {
         std::string filename = "random_movie_text_" + std::to_string(fileIndex) + ".txt";
         std::ofstream outputFile(filename);
@@ -44,7 +45,7 @@ void generateRandomTextFiles(int numFiles = 4, int linesPerFile = 15000) {
         for (int lineIndex = 0; lineIndex < linesPerFile; ++lineIndex) {
             if (rand() % 2 == 0) {
                 std::string movieName = movieNames[rand() % movieNames.size()];
-                std::string sentence = getRandomSentence(movieName);
+                std::string sentence  = getRandomSentence(movieName);
                 outputFile << sentence << std::endl;
             } else {
                 std::string randomLine = getRandomLine();
