@@ -31,7 +31,7 @@ std::string getRandomLine() {
     return randomLines[rand() % randomLines.size()];
 }
 
-void generateRandomTextFiles(int numFiles = 4, int linesPerFile = 1000) {
+void generateRandomTextFiles(int numFiles = 4, int linesPerFile = 15000) {
     for (int fileIndex = 1; fileIndex <= numFiles; ++fileIndex) {
         std::string filename = "random_movie_text_" + std::to_string(fileIndex) + ".txt";
         std::ofstream outputFile(filename);

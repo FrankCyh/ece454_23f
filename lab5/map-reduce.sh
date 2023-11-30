@@ -1,4 +1,4 @@
 set -x
 
-g++ map-reduce.cpp
+g++ -pthread map-reduce.cpp
 ./a.out

@@ -4,10 +4,6 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
-#include <pthread.h>
-#include <thread>
-
-using namespace std;
 
 struct MovieInfo {
     std::string movieName;
@@ -19,7 +15,8 @@ std::vector<std::string> movieNames = {"Inception", "Titanic", "Avatar", "The Sh
 
 std::unordered_map<std::string, MovieInfo*> hashTables[4]; // Hash tables for Input1 to Input4
 
-void map(int inputIndex, std::string line, std::string movie_name_input) {
+void inline map(int inputIndex, std::string line, std::string movie_name_input) {
+    auto &licm = hashTables[inputIndex];
     for(int i = 0; i < movieNames.size(); i++){
         if (line.find(movieNames[i]) != std::string::npos) {
             // Extract movie name and movie info
@@ -31,13 +28,13 @@ void map(int inputIndex, std::string line, std::string movie_name_input) {
             MovieInfo* newNode = new MovieInfo{movieName, movieInfo, nullptr};
 
             // Insert into the corresponding hash table
-            if (hashTables[inputIndex].find(movieName) == hashTables[inputIndex].end()) {
+            if ((licm).find(movieName) == (licm).end()) {
                 // If movieName is not in the hash table, create a new entry
-                hashTables[inputIndex][movieName] = newNode;
+                (licm)[movieName] = newNode;
             } else {
                 // If movieName is already in the hash table, add to the linked list
-                newNode->next = hashTables[inputIndex][movieName];
-                hashTables[inputIndex][movieName] = newNode;
+                newNode->next = (licm)[movieName];
+                (licm)[movieName] = newNode;
             }
             break;
         }
@@ -45,8 +42,9 @@ void map(int inputIndex, std::string line, std::string movie_name_input) {
 }
 
 
-void shuffle() {
+void inline shuffle() {
     // Use Hash1 as the major hash table
+    auto &licm = hashTables[0];
     for (int i = 1; i < 4; ++i) {
         for (auto& entry : hashTables[i]) {
             std::string movieName = entry.first;
@@ -57,13 +55,13 @@ void shuffle() {
                 MovieInfo* newNode = new MovieInfo{currentNode->movieName, currentNode->movieInfo, nullptr};
 
                 // Insert into the corresponding hash table (Hash1)
-                if (hashTables[0].find(movieName) == hashTables[0].end()) {
+                if ((licm).find(movieName) == (licm).end()) {
                     // If movieName is not in Hash1, create a new entry
-                    hashTables[0][movieName] = newNode;
+                    (licm)[movieName] = newNode;
                 } else {
                     // If movieName is already in Hash1, add to the linked list
-                    newNode->next = hashTables[0][movieName];
-                    hashTables[0][movieName] = newNode;
+                    newNode->next = (licm)[movieName];
+                    (licm)[movieName] = newNode;
                 }
 
                 currentNode = currentNode->next;
@@ -93,7 +91,7 @@ std::unordered_map<std::string, int> reduce() {
     return countHash;
 }
 
-void processInputFile(int inputIndex, std::string filename, std::string movie_name_input) {
+void inline processInputFile(int inputIndex, std::string filename, std::string movie_name_input) {
     std::ifstream inputFile(filename);
     std::string line;
     while (std::getline(inputFile, line)) {
@@ -113,17 +111,19 @@ int main() {
     double elapsed_time;
     start_time = clock();
 
-    std::vector<std::thread> ThreadVector;
-    
-    for (int i = 0; i < 4; ++i) {
-        std::string filename = "random_movie_text_" + std::to_string(i + 1) + ".txt";
-        ThreadVector.emplace_back([=]() { processInputFile(i, filename, movie_name_input); });
-        // std::thread t(processInputFile, this, i, filename, movie_name_input);
-        // processInputFile(i, filename, movie_name_input);
-    }
+    // for (int i = 0; i < 4; ++i) {
+    //     std::string filename = "random_movie_text_" + std::to_string(i + 1) + ".txt";
+    //     processInputFile(i, filename, movie_name_input);
+    // }
+    std::string filename = "random_movie_text_" + std::to_string(1) + ".txt";
+    processInputFile(0, filename, movie_name_input);
+    filename = "random_movie_text_" + std::to_string(2) + ".txt";
+    processInputFile(1, filename, movie_name_input);
+    filename = "random_movie_text_" + std::to_string(3) + ".txt";
+    processInputFile(2, filename, movie_name_input);
+    filename = "random_movie_text_" + std::to_string(4) + ".txt";
+    processInputFile(3, filename, movie_name_input);
 
-    for(auto& t: ThreadVector)
-        t.join();
     // print after map
 
     // for (const auto& entry : hashTables[0]) {
