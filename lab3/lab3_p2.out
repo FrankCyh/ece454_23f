@@ -1,0 +1,177 @@
+---------------------------------------- a_test1 ----------------------------------------
+
+a-Print the sizeof each member type in struct a_test1
+Size of `short a` is 2
+Size of `int x` is 4
+Size of `short b` is 2
+
+b-Print the size of table1[0] and then the sizeof the whole table1
+Size of `table1[0]` is 12
+Size of `table1` is 120
+
+c-Print the alignment and address of table1[0]
+Alignment of table1[0] is 4
+
+d-Show the length of an element in the array
+Address of `table1[0]` is 0x55b34b782100
+Address of `table1[1]` is 0x55b34b78210c
+Length of `table1[0]` is 12
+Address of `table1[1]` is 0x55b34b78210c
+Address of `table1[2]` is 0x55b34b782118
+Length of `table1[1]` is 12
+Address of `table1[2]` is 0x55b34b782118
+Address of `table1[3]` is 0x55b34b782124
+Length of `table1[2]` is 12
+Address of `table1[3]` is 0x55b34b782124
+Address of `table1[4]` is 0x55b34b782130
+Length of `table1[3]` is 12
+Address of `table1[4]` is 0x55b34b782130
+Address of `table1[5]` is 0x55b34b78213c
+Length of `table1[4]` is 12
+Address of `table1[5]` is 0x55b34b78213c
+Address of `table1[6]` is 0x55b34b782148
+Length of `table1[5]` is 12
+Address of `table1[6]` is 0x55b34b782148
+Address of `table1[7]` is 0x55b34b782154
+Length of `table1[6]` is 12
+Address of `table1[7]` is 0x55b34b782154
+Address of `table1[8]` is 0x55b34b782160
+Length of `table1[7]` is 12
+Address of `table1[8]` is 0x55b34b782160
+Address of `table1[9]` is 0x55b34b78216c
+Length of `table1[8]` is 12
+
+---------------------------------------- a_test2 ----------------------------------------
+
+a-Print the sizeof each member type in struct a_test2
+Size of `short a` is 2
+Size of `short b` is 2
+Size of `int x` is 4
+
+b-Print the size of table2[0] and then the sizeof the whole table2
+Size of `table2[0]` is 8
+Size of `table2` is 80
+
+c-Print the alignment and address of table2[0]
+Alignment of table2[0] is 4
+
+d-Show the length of an element in the array
+Address of `table2[0]` is 0x55b34b7821a0
+Address of `table2[1]` is 0x55b34b7821a8
+Length of `table2[0]` is 8
+Address of `table2[1]` is 0x55b34b7821a8
+Address of `table2[2]` is 0x55b34b7821b0
+Length of `table2[1]` is 8
+Address of `table2[2]` is 0x55b34b7821b0
+Address of `table2[3]` is 0x55b34b7821b8
+Length of `table2[2]` is 8
+Address of `table2[3]` is 0x55b34b7821b8
+Address of `table2[4]` is 0x55b34b7821c0
+Length of `table2[3]` is 8
+Address of `table2[4]` is 0x55b34b7821c0
+Address of `table2[5]` is 0x55b34b7821c8
+Length of `table2[4]` is 8
+Address of `table2[5]` is 0x55b34b7821c8
+Address of `table2[6]` is 0x55b34b7821d0
+Length of `table2[5]` is 8
+Address of `table2[6]` is 0x55b34b7821d0
+Address of `table2[7]` is 0x55b34b7821d8
+Length of `table2[6]` is 8
+Address of `table2[7]` is 0x55b34b7821d8
+Address of `table2[8]` is 0x55b34b7821e0
+Length of `table2[7]` is 8
+Address of `table2[8]` is 0x55b34b7821e0
+Address of `table2[9]` is 0x55b34b7821e8
+Length of `table2[8]` is 8
+
+---------------------------------------- a_test3 ----------------------------------------
+
+a-Print the sizeof each member type in struct a_test3
+Size of `char c` is 1
+Size of `short s` is 2
+Size of `int k` is 4
+Size of `long l` is 8
+Size of `float f` is 4
+Size of `double d` is 8
+
+b-Print the size of table3[0] and then the sizeof the whole table3
+Size of `table3[0]` is 32
+Size of `table3` is 320
+
+c-Print the alignment and address of table3[0]
+Alignment of table3[0] is 8
+
+d-Show the length of an element in the array
+Address of `table3[0]` is 0x55b34b782200
+Address of `table3[1]` is 0x55b34b782220
+Length of `table3[0]` is 32
+Address of `table3[1]` is 0x55b34b782220
+Address of `table3[2]` is 0x55b34b782240
+Length of `table3[1]` is 32
+Address of `table3[2]` is 0x55b34b782240
+Address of `table3[3]` is 0x55b34b782260
+Length of `table3[2]` is 32
+Address of `table3[3]` is 0x55b34b782260
+Address of `table3[4]` is 0x55b34b782280
+Length of `table3[3]` is 32
+Address of `table3[4]` is 0x55b34b782280
+Address of `table3[5]` is 0x55b34b7822a0
+Length of `table3[4]` is 32
+Address of `table3[5]` is 0x55b34b7822a0
+Address of `table3[6]` is 0x55b34b7822c0
+Length of `table3[5]` is 32
+Address of `table3[6]` is 0x55b34b7822c0
+Address of `table3[7]` is 0x55b34b7822e0
+Length of `table3[6]` is 32
+Address of `table3[7]` is 0x55b34b7822e0
+Address of `table3[8]` is 0x55b34b782300
+Length of `table3[7]` is 32
+Address of `table3[8]` is 0x55b34b782300
+Address of `table3[9]` is 0x55b34b782320
+Length of `table3[8]` is 32
+
+---------------------------------------- a_test4 ----------------------------------------
+
+a-Print the sizeof each member type in struct a_test4
+Size of `double d` is 8
+Size of `long l` is 8
+Size of `float f` is 4
+Size of `int k` is 4
+Size of `short s` is 2
+Size of `char c` is 1
+
+b-Print the size of table4[0] and then the sizeof the whole table4
+Size of `table4[0]` is 32
+Size of `table4` is 320
+
+c-Print the alignment and address of table4[0]
+Alignment of table4[0] is 8
+
+d-Show the length of an element in the array
+Address of `table4[0]` is 0x55b34b782360
+Address of `table4[1]` is 0x55b34b782380
+Length of `table4[0]` is 32
+Address of `table4[1]` is 0x55b34b782380
+Address of `table4[2]` is 0x55b34b7823a0
+Length of `table4[1]` is 32
+Address of `table4[2]` is 0x55b34b7823a0
+Address of `table4[3]` is 0x55b34b7823c0
+Length of `table4[2]` is 32
+Address of `table4[3]` is 0x55b34b7823c0
+Address of `table4[4]` is 0x55b34b7823e0
+Length of `table4[3]` is 32
+Address of `table4[4]` is 0x55b34b7823e0
+Address of `table4[5]` is 0x55b34b782400
+Length of `table4[4]` is 32
+Address of `table4[5]` is 0x55b34b782400
+Address of `table4[6]` is 0x55b34b782420
+Length of `table4[5]` is 32
+Address of `table4[6]` is 0x55b34b782420
+Address of `table4[7]` is 0x55b34b782440
+Length of `table4[6]` is 32
+Address of `table4[7]` is 0x55b34b782440
+Address of `table4[8]` is 0x55b34b782460
+Length of `table4[7]` is 32
+Address of `table4[8]` is 0x55b34b782460
+Address of `table4[9]` is 0x55b34b782480
+Length of `table4[8]` is 32
